@@ -7,7 +7,15 @@ def load_config(config_file:str):
     with open(config_file, 'r') as f:
         return json.load(f)
     
-def check_file(file_name:str, config:dict):
+def check_file(file_name:str, config:dict, directory:str):
+    
+    full_path = os.path.join(directory, file_name)
+    if os.path.isdir(full_path):
+        if file_name in config['main_folders']:
+            return None
+        return 'Folders'
+
+
     file_name = file_name.lower()
     key_list = config['special_files'].keys()
     for i in key_list:
@@ -21,12 +29,11 @@ def check_file(file_name:str, config:dict):
             return i
     return 'Other'    
 
+
+
 def move_file(directory:str, file_name:str, folder_name:str):
     path = os.path.join(directory, file_name) 
     
-    if os.path.isdir(path):
-        return None
-
     new_directory = os.path.join(directory, folder_name)
     new_path = os.path.join(new_directory, file_name)
     
@@ -48,8 +55,8 @@ config = load_config(config_file='config.json') #add error check for json
 
 file_list = os.listdir(DIR)
 for i in file_list:
-    folder_name = check_file(file_name=i, config=config)
-    folder_path = os.path.join(DIR,folder_name)
-    os.makedirs(folder_path, exist_ok=True)
-
-    move_file(directory=DIR, folder_name=folder_name, file_name=i)
+    folder_name = check_file(file_name=i, config=config, directory=DIR)
+    if folder_name:
+        folder_path = os.path.join(DIR,folder_name)
+        os.makedirs(folder_path, exist_ok=True)
+        move_file(directory=DIR, folder_name=folder_name, file_name=i)

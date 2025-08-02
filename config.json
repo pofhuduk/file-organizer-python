@@ -47,5 +47,8 @@
     "Backups & Temp": [
       ".bak", ".tmp", ".temp", ".old", ".swn", ".swo", ".swp"
     ]
-  }
+  },
+    "main_folders": [
+      "Archives", "Images", "Videos", "Audio", "Documents", "Code & Scripts", "Executables & Installers", "Fonts", "Databases", "Disk Images", "Backups & Temp", "Folders", "Other"
+    ]
 }
