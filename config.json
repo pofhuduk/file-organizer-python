@@ -1,0 +1,51 @@
+{
+  "special_files": {
+    ".tar.gz": "Archives",
+    ".tgz": "Archives",
+    ".tar.bz2": "Archives",
+    ".tbz2": "Archives",
+    ".tar.xz": "Archives",
+    ".txz": "Archives",
+    ".tar.z": "Archives"
+  },
+  "folders": {
+    "Images": [
+      ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".webp", ".tiff", ".tif",
+      ".heic", ".heif", ".psd", ".ai", ".eps", ".ico"
+    ],
+    "Videos": [
+      ".mp4", ".mov", ".avi", ".mkv", ".wmv", ".flv", ".webm", ".mpeg",
+      ".mpg", ".3gp", ".m4v"
+    ],
+    "Audio": [
+      ".mp3", ".wav", ".aac", ".flac", ".ogg", ".wma", ".m4a", ".aiff"
+    ],
+    "Documents": [
+      ".pdf", ".docx", ".doc", ".xlsx", ".xls", ".pptx", ".ppt", ".txt",
+      ".rtf", ".odt", ".ods", ".odp", ".csv", ".epub", ".mobi"
+    ],
+    "Archives": [
+      ".zip", ".rar", ".7z", ".gz", ".bz2", ".xz", ".tar", ".iso"
+    ],
+    "Code & Scripts": [
+      ".py", ".js", ".html", ".css", ".java", ".c", ".cpp", ".h", ".cs",
+      ".php", ".rb", ".go", ".swift", ".json", ".xml", ".yml", ".yaml",
+      ".sh", ".bat", ".ps1"
+    ],
+    "Executables & Installers": [
+      ".appimage", ".exe", ".msi", ".apk", ".dmg", ".deb", ".rpm", ".app", ".x86_64"
+    ],
+    "Fonts": [
+      ".ttf", ".otf", ".woff", ".woff2", ".eot"
+    ],
+    "Databases": [
+      ".db", ".sqlite", ".sqlite3", ".mdb", ".sql", ".dbf"
+    ],
+    "Disk Images": [
+      ".iso", ".img", ".vhd", ".vmdk", ".toast"
+    ],
+    "Backups & Temp": [
+      ".bak", ".tmp", ".temp", ".old", ".swn", ".swo", ".swp"
+    ]
+  }
+}
