@@ -23,6 +23,10 @@ def check_file(file_name:str, config:dict):
 
 def move_file(directory:str, file_name:str, folder_name:str):
     path = os.path.join(directory, file_name) 
+    
+    if os.path.isdir(path):
+        return None
+
     new_directory = os.path.join(directory, folder_name)
     new_path = os.path.join(new_directory, file_name)
     
