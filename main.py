@@ -6,15 +6,13 @@ import shutil
 def load_config(config_file:str):
     with open(config_file, 'r') as f:
         return json.load(f)
-    
+
 def check_file(file_name:str, config:dict, directory:str):
-    
     full_path = os.path.join(directory, file_name)
     if os.path.isdir(full_path):
         if file_name in config['main_folders']:
             return None
         return 'Folders'
-
 
     file_name = file_name.lower()
     key_list = config['special_files'].keys()
