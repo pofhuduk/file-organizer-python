@@ -16,7 +16,7 @@ def load_config(config_file:str):
         return None
 
 def load_env_vars():
-    dotenv.load_dotenv()
+    dotenv.load_dotenv(override=True)
     DIR = os.getenv('DIR')
     
     if not DIR:
@@ -27,6 +27,23 @@ def load_env_vars():
         logging.error(f"Error: The path '{DIR}' does not exist or is not a directory.")
         exit()
     return DIR
+
+def setup_logging():
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)
+    formatter = logging.Formatter('[%(asctime)s] %(message)s')
+
+    file_handler = logging.FileHandler('organizer.log')
+    file_handler.setFormatter(formatter)
+    
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(formatter)
+    stream_handler.setLevel(logging.WARNING)
+
+    logger.addHandler(file_handler)
+    logger.addHandler(stream_handler)
+    
+    return logger
 
 def check_file(file_name:str, config:dict, directory:str):
     full_path = os.path.join(directory, file_name)
@@ -54,23 +71,19 @@ def move_file(directory:str, file_name:str, folder_name:str):
     new_directory = os.path.join(directory, folder_name)
     new_path = os.path.join(new_directory, file_name)
     
-    try:
-        shutil.move(path, new_path)
-    except FileExistsError:
-        logging.info('Skipping: There is already a file with'
-              f'{file_name} name on {folder_name} folder.')
-    except PermissionError:
-        logging.error('Error: You have not got enough permissions.')
-        exit()
+    if os.path.exists(new_path):
+        logging.warning('Skipping: There is already a file with'
+            f'{file_name} name on {folder_name} folder.')
+    else:
+        try:
+            shutil.move(path, new_path)
+        except PermissionError:
+            logging.error('Error: You have not got enough permissions.')
+            exit()
 
-def main():
-    logger = logging.getLogger()
-    logging.basicConfig(
-            filename='example.log',
-            encoding='utf-8',
-            level=logging.INFO,
-            format='[%(asctime)s] %(message)s')
-    
+def main():   
+    logger = setup_logging()    
+
     DIR = load_env_vars()    
     config = load_config(config_file='config.json')
     if not config:
@@ -83,7 +96,7 @@ def main():
             folder_path = os.path.join(DIR,folder_name)
             os.makedirs(folder_path, exist_ok=True)
             move_file(directory=DIR, folder_name=folder_name, file_name=i)
-            logger.info(f'{i} -> {folder_name}')
+            logger.info(f'{i} => {folder_name}')
 
 if __name__ == "__main__":
     main()
