@@ -14,6 +14,22 @@ def load_config(config_file:str):
         print(f'Error: Configuration file {config_file} is not valid JSON format.')
         return None
 
+def load_env_vars():
+    dotenv.load_dotenv()
+    DIR = os.getenv('DIR')
+
+    if not DIR:
+        print("Error: The 'DIR' environment variable is not set or"
+        "is empty. Please define it in your .env file.")
+        exit()
+
+    if not os.path.isdir(DIR):
+        print(f"Error: The path '{DIR}' does not exist or is not a directory.")
+        exit()
+    
+    return DIR
+
+
 def check_file(file_name:str, config:dict, directory:str):
     full_path = os.path.join(directory, file_name)
     if os.path.isdir(full_path):
@@ -43,17 +59,7 @@ def move_file(directory:str, file_name:str, folder_name:str):
     shutil.move(path, new_path)
 
 def main():
-    dotenv.load_dotenv()
-    DIR = os.getenv('DIR')
-
-    if not DIR:
-        print("Error: The 'DIR' environment variable is not set or"
-        "is empty. Please define it in your .env file.")
-        exit()
-
-    if not os.path.isdir(DIR):
-        print(f"Error: The path '{DIR}' does not exist or is not a directory.")
-        exit()
+    DIR = load_env_vars()    
 
     config = load_config(config_file='config.json')
     if not config:
