@@ -2,16 +2,17 @@ import os
 import dotenv
 import json
 import shutil
+import logging
 
 def load_config(config_file:str):
     try:
         with open(config_file, 'r') as f:
             return json.load(f)
     except FileNotFoundError:
-        print(f'Error: Configuration file {config_file} not found.')
+        logging.error(f'Error: Configuration file {config_file} not found.')
         return None
     except json.JSONDecodeError:
-        print(f'Error: Configuration file {config_file} is not valid JSON format.')
+        logging.error(f'Error: Configuration file {config_file} is not valid JSON format.')
         return None
 
 def load_env_vars():
@@ -19,13 +20,12 @@ def load_env_vars():
     DIR = os.getenv('DIR')
     
     if not DIR:
-        print("Error: The 'DIR' environment variable is not set or"
+        logging.error("Error: The 'DIR' environment variable is not set or"
         "is empty. Please define it in your .env file.")
         exit()
     if not os.path.isdir(DIR):
-        print(f"Error: The path '{DIR}' does not exist or is not a directory.")
+        logging.error(f"Error: The path '{DIR}' does not exist or is not a directory.")
         exit()
-    
     return DIR
 
 def check_file(file_name:str, config:dict, directory:str):
@@ -57,15 +57,21 @@ def move_file(directory:str, file_name:str, folder_name:str):
     try:
         shutil.move(path, new_path)
     except FileExistsError:
-        print('Skipping: There is already a file with'
+        logging.info('Skipping: There is already a file with'
               f'{file_name} name on {folder_name} folder.')
     except PermissionError:
-        print('Error: You have not got enough permissions.')
+        logging.error('Error: You have not got enough permissions.')
         exit()
 
 def main():
+    logger = logging.getLogger()
+    logging.basicConfig(
+            filename='example.log',
+            encoding='utf-8',
+            level=logging.INFO,
+            format='[%(asctime)s] %(message)s')
+    
     DIR = load_env_vars()    
-
     config = load_config(config_file='config.json')
     if not config:
         exit()
@@ -77,6 +83,7 @@ def main():
             folder_path = os.path.join(DIR,folder_name)
             os.makedirs(folder_path, exist_ok=True)
             move_file(directory=DIR, folder_name=folder_name, file_name=i)
+            logger.info(f'{i} -> {folder_name}')
 
 if __name__ == "__main__":
     main()
