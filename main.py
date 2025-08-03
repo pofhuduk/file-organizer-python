@@ -17,18 +17,16 @@ def load_config(config_file:str):
 def load_env_vars():
     dotenv.load_dotenv()
     DIR = os.getenv('DIR')
-
+    
     if not DIR:
         print("Error: The 'DIR' environment variable is not set or"
         "is empty. Please define it in your .env file.")
         exit()
-
     if not os.path.isdir(DIR):
         print(f"Error: The path '{DIR}' does not exist or is not a directory.")
         exit()
     
     return DIR
-
 
 def check_file(file_name:str, config:dict, directory:str):
     full_path = os.path.join(directory, file_name)
@@ -56,7 +54,14 @@ def move_file(directory:str, file_name:str, folder_name:str):
     new_directory = os.path.join(directory, folder_name)
     new_path = os.path.join(new_directory, file_name)
     
-    shutil.move(path, new_path)
+    try:
+        shutil.move(path, new_path)
+    except FileExistsError:
+        print('Skipping: There is already a file with'
+              f'{file_name} name on {folder_name} folder.')
+    except PermissionError:
+        print('Error: You have not got enough permissions.')
+        exit()
 
 def main():
     DIR = load_env_vars()    
