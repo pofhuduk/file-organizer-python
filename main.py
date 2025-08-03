@@ -31,7 +31,7 @@ def load_env_vars():
 def setup_logging():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    formatter = logging.Formatter('[%(asctime)s] %(message)s')
+    formatter = logging.Formatter('[%(asctime)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
 
     file_handler = logging.FileHandler('organizer.log')
     file_handler.setFormatter(formatter)
