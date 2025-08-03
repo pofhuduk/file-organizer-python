@@ -4,8 +4,15 @@ import json
 import shutil
 
 def load_config(config_file:str):
-    with open(config_file, 'r') as f:
-        return json.load(f)
+    try:
+        with open(config_file, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print(f'Error: Configuration file {config_file} not found.')
+        return None
+    except json.JSONDecodeError:
+        print(f'Error: Configuration file {config_file} is not valid JSON format.')
+        return None
 
 def check_file(file_name:str, config:dict, directory:str):
     full_path = os.path.join(directory, file_name)
@@ -27,8 +34,6 @@ def check_file(file_name:str, config:dict, directory:str):
             return i
     return 'Other'    
 
-
-
 def move_file(directory:str, file_name:str, folder_name:str):
     path = os.path.join(directory, file_name) 
     
@@ -37,24 +42,30 @@ def move_file(directory:str, file_name:str, folder_name:str):
     
     shutil.move(path, new_path)
 
-dotenv.load_dotenv()
-DIR = os.getenv('DIR')
+def main():
+    dotenv.load_dotenv()
+    DIR = os.getenv('DIR')
 
-if not DIR:
-    print("Error: The 'DIR' environment variable is not set or"
-    "is empty. Please define it in your .env file.")
-    exit()
+    if not DIR:
+        print("Error: The 'DIR' environment variable is not set or"
+        "is empty. Please define it in your .env file.")
+        exit()
 
-if not os.path.isdir(DIR):
-    print(f"Error: The path '{DIR}' does not exist or is not a directory.")
-    exit()
+    if not os.path.isdir(DIR):
+        print(f"Error: The path '{DIR}' does not exist or is not a directory.")
+        exit()
 
-config = load_config(config_file='config.json') #add error check for json
+    config = load_config(config_file='config.json')
+    if not config:
+        exit()
 
-file_list = os.listdir(DIR)
-for i in file_list:
-    folder_name = check_file(file_name=i, config=config, directory=DIR)
-    if folder_name:
-        folder_path = os.path.join(DIR,folder_name)
-        os.makedirs(folder_path, exist_ok=True)
-        move_file(directory=DIR, folder_name=folder_name, file_name=i)
+    file_list = os.listdir(DIR)
+    for i in file_list:
+        folder_name = check_file(file_name=i, config=config, directory=DIR)
+        if folder_name:
+            folder_path = os.path.join(DIR,folder_name)
+            os.makedirs(folder_path, exist_ok=True)
+            move_file(directory=DIR, folder_name=folder_name, file_name=i)
+
+if __name__ == "__main__":
+    main()
